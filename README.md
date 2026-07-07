@@ -12,16 +12,6 @@ Given a food image, the pipeline:
 
 ---
 
-
-
-
-
-```
-
-
-
----
-
 ## ✨ Features
 
 | Feature | Description |
@@ -39,43 +29,74 @@ Given a food image, the pipeline:
 
 ## 🗂️ Project Structure
 
-```
 inverse_cooking/
+
 │
+
 ├── data/
+
+
 │   ├── layer1.json          # Recipe1M+ recipe metadata
+
 │   ├── images/              # Recipe1M+ food images (nested layout)
+
 │   └── recipes.pkl          # Preprocessed recipes cache (generated)
+
 │
+
 ├── models/
+
 │   ├── __init__.py          # Re-exports all model classes
+
 │   ├── autoencoder.py       # FoodAutoencoder + RecipeHead
+
 │   ├── minivgg.py           # MiniVGG
+
 │   ├── minigooglenet.py     # MiniGoogleNet (Inception modules)
+
 │   ├── minialexnet.py       # MiniAlexNet
+
 │   └── cnn2fc.py            # CNN with 2 Fully Connected Layers
+
 │
 ├── templates/               # Jinja2 HTML templates
+
 │   ├── base.html
+
 │   ├── index.html           # Upload page
+
 │   ├── result.html          # Recipe output page
+
 │   ├── signup.html
+
 │   └── login.html
+
 │
 ├── static/
+
 │   ├── uploads/             # User-uploaded images
+
 │   └── style.css
+
 │
 ├── checkpoints/             # Saved model weights (.pth)
+
 ├── dataset.py               # FoodDataset + transforms + vocab builder
-├── train.py                 # Training loop (all architectures)
+
+├── train.py                 # Training loop (all architectures
+
 ├── evaluate.py              # Test-set evaluation + classification report
+
 ├── predict.py               # Single-image inference
+
 ├── extract.py               # Recipe JSON parsing + nutrition + cooking style
+
 ├── app.py                   # Flask application entry point
+
 ├── requirements.txt
+
 └── .env                     # SECRET_KEY (not committed)
-```
+
 
 ---
 
@@ -208,6 +229,8 @@ Output (3×224×224)
 | Model | Layers | Params | Notes |
 |---|---|---|---|
 | **MiniVGG** | 3 × (Conv→BN→ReLU)² + MaxPool + 2×FC | 6.1M | Best accuracy |
+
+
 | **MiniGoogleNet** | Stem + 4 Inception modules + GAP | 4.3M | Parallel 1×1, 3×3, 5×5 branches |
 | **MiniAlexNet** | 5 Conv + 3 FC | 8.7M | Large 11×11 kernel in Conv1 |
 | **CNN-2FC** | 2 Conv blocks + 2 FC | 2.1M | Lightest baseline |
@@ -245,12 +268,12 @@ Ingredient prediction (micro-F1 on Recipe1M+ test split):
 
 **Data split (Recipe1M+):**
 
-```
+
 Total  ──────────────────────────── 1,029,720
          │ 80%            │ 10%   │ 10%
         Train            Val     Test
       ~823,776          ~102,972  ~102,972
-```
+
 
 ---
 

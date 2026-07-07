@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}InverseCooking {% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <div class="particles" id="particles"></div>
+
+  {% if session.get('user_id') %}
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="{{ url_for('index') }}" class="nav-brand">
+        <div class="nb-cube">🍽️</div>
+        <span class="nb-title">Inverse<span>Cooking</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}"
+           class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+          <span class="nav-link-ico">📷</span> Upload
+        </a>
+        <a href="{{ url_for('history') }}"
+           class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
+          <span class="nav-link-ico">📋</span> History
+        </a>
+      </div>
+      <div class="nav-right">
+        <div class="nav-username">
+          <div class="nav-avatar">{{ session.get('username','U')[0].upper() }}</div>
+          {{ session.get('username') }}
+        </div>
+        <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+      <div class="flash flash-{{ cat }}">
+        <span>{% if cat=='success'%}✓{% elif cat=='error'%}✕{% else %}ℹ{% endif %}</span>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="main {% if session.get('user_id') %}main-padded{% endif %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/bg.js') }}"></script>
+</body>
+</html>

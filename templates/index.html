@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Upload · InverseCooking AI{% endblock %}
+{% block content %}
+<div class="upload-page">
+
+  <div class="page-hero">
+    <div class="hero-eyebrow"><div class="pulse-dot"></div>Autoencoder · 85% accuracy</div>
+    <h1 class="page-title">Drop a photo.<br><span class="gtext">Get the recipe.</span></h1>
+    <p class="page-sub">
+      Our deep learning model analyses every pixel — ingredients, nutrition,
+      cooking style and step-by-step instructions generated in seconds.
+    </p>
+  </div>
+
+  <div class="upload-card">
+    <div class="uc-shine"></div>
+
+    <form action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data" id="upForm">
+
+      <!-- Drop zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" name="image" id="imgInput" accept="image/*" hidden required>
+
+        <div class="dz-content" id="dzContent">
+          <div class="dz-orb3d">
+            <div class="orb-face of-mid"></div>
+            <div class="orb-face of-front"></div>
+            <div class="orb-face of-back"></div>
+            <span class="orb-icon">📷</span>
+          </div>
+          <p class="dz-title">Drop your food photo here</p>
+          <p class="dz-hint">or <span class="dz-click" onclick="document.getElementById('imgInput').click()">browse files</span></p>
+          <p class="dz-fmt">JPG · PNG · WEBP · max 10MB</p>
+        </div>
+
+        <div class="dz-preview" id="dzPreview" hidden>
+          <img id="prevImg" src="" alt="preview">
+          <div class="dz-overlay">
+            <span class="dz-ready">✓ Image ready</span>
+            <button type="button" class="dz-change" onclick="resetDrop()">Change</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servings -->
+      <div class="servings-bar">
+        <span class="sb-icon">👥</span>
+        <div class="sb-info">
+          <div class="sb-title">How many people?</div>
+          <div class="sb-sub">Ingredients scale automatically</div>
+        </div>
+        <div class="sb-ctl">
+          <button type="button" class="sbc-btn" onclick="chP(-1)">−</button>
+          <div>
+            <input type="number" name="people" id="pplInput" value="4" min="1" max="20" hidden>
+            <span class="sbc-val" id="pplNum">4</span>
+            <span class="sbc-unit">people</span>
+          </div>
+          <button type="button" class="sbc-btn" onclick="chP(1)">+</button>
+        </div>
+      </div>
+
+      <!-- Generate -->
+      <button type="submit" class="btn-generate" id="btnGen">
+        <div class="bg-idle" id="bgIdle">
+          <span class="bg-spark">✨</span>
+          <span>Generate Recipe</span>
+          <span class="bg-arr">→</span>
+        </div>
+        <div class="bg-loading" id="bgLoad">
+          <div class="spin-ring"></div>
+          <span>Analysing image…</span>
+        </div>
+      </button>
+
+    </form>
+
+    <!-- Pipeline mini -->
+    <div class="pipe-row">
+      <div class="pr-step"><span>📷</span><small>Image</small></div>
+      <div class="pr-line"></div>
+      <div class="pr-step"><span>⚙️</span><small>Process</small></div>
+      <div class="pr-line"></div>
+      <div class="pr-step"><span>🧠</span><small>Encode</small></div>
+      <div class="pr-line"></div>
+      <div class="pr-step"><span>🔮</span><small>Predict</small></div>
+      <div class="pr-line"></div>
+      <div class="pr-step"><span>📋</span><small>Recipe</small></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const dz  = document.getElementById('dropZone');
+const inp = document.getElementById('imgInput');
+
+dz.addEventListener('click', () => inp.click());
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('over');
+  if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; showPrev(e.dataTransfer.files[0]); }
+});
+inp.addEventListener('change', e => { if (e.target.files[0]) showPrev(e.target.files[0]); });
+
+function showPrev(f) {
+  const r = new FileReader();
+  r.onload = ev => {
+    document.getElementById('prevImg').src = ev.target.result;
+    document.getElementById('dzContent').hidden = true;
+    document.getElementById('dzPreview').hidden = false;
+  };
+  r.readAsDataURL(f);
+}
+function resetDrop() {
+  inp.value = '';
+  document.getElementById('dzContent').hidden = false;
+  document.getElementById('dzPreview').hidden = true;
+}
+function chP(d) {
+  const i = document.getElementById('pplInput');
+  const v = Math.max(1, Math.min(20, parseInt(i.value) + d));
+  i.value = v;
+  document.getElementById('pplNum').textContent = v;
+}
+document.getElementById('upForm').addEventListener('submit', function(e) {
+  if (!inp.files[0]) { e.preventDefault(); return; }
+  document.getElementById('bgIdle').classList.add('hidden');
+  document.getElementById('bgLoad').classList.add('active');
+  document.getElementById('btnGen').disabled = true;
+});
+</script>
+{% endblock %}

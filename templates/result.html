@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Recipe · InverseCooking AI{% endblock %}
+{% block content %}
+
+<div class="confetti-stage" id="cStage"></div>
+
+<div class="result-page">
+
+  <div class="rp-head">
+    <div class="hero-eyebrow"><div class="pulse-dot"></div>Recipe generated</div>
+    <h1 class="rp-title">Your <span class="gtext">recipe</span> is ready</h1>
+    <p class="rp-sub">
+      Analysed for <strong>{{ result.people }}</strong>
+      {{ 'person' if result.people == 1 else 'people' }} ·
+      Cooking style: <strong>{{ result.style | capitalize }}</strong>
+    </p>
+  </div>
+
+  <!-- 3-column grid -->
+  <div class="rg">
+
+    <!-- Image -->
+    <div class="img-card">
+      <img src="/{{ image_path }}" alt="food" class="ic-img">
+      <div class="ic-tag">
+        <div class="ic-tag-inner">
+          <span class="ic-tag-label">{{ result.style | capitalize }}</span>
+          <span>🔥</span>
+        </div>
+      </div>
+      <div class="ic-meta">
+        <div class="icm-row"><span>👥 Serves</span><strong>{{ result.people }}</strong></div>
+        <div class="icm-row"><span>🧠 Model</span><strong>Autoencoder</strong></div>
+        <div class="icm-row"><span>⚡ Time</span><strong>&lt; 1 sec</strong></div>
+      </div>
+    </div>
+
+    <!-- Ingredients -->
+    <div class="rp-panel" style="animation-delay:.08s">
+      <div class="rpp-head">
+        <span class="rpp-ico">🥬</span>
+        <h2 class="rpp-title">Ingredients</h2>
+        <span class="rpp-count">{{ result.ingredients | length }}</span>
+      </div>
+      <ul class="ingr-ul">
+        {% for ingr in result.ingredients %}
+        <li class="ingr-li" style="animation-delay:{{ loop.index * 0.04 }}s">
+          <div class="ingr-dot"></div>
+          <span class="ingr-name">{{ ingr.name }}</span>
+          <span class="ingr-qty">{{ ingr.qty }}{% if ingr.unit %} {{ ingr.unit }}{% endif %}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Nutrition -->
+    <div class="rp-panel" style="animation-delay:.16s">
+      <div class="rpp-head">
+        <span class="rpp-ico">❤️</span>
+        <h2 class="rpp-title">Nutrition</h2>
+        <span class="rpp-count">per serving</span>
+      </div>
+      <div class="nutr-cal">
+        <div>
+          <div class="nc-val">{{ result.nutrition.calories }}</div>
+          <div class="nc-lbl">kcal per serving</div>
+        </div>
+        <div class="nc-ring">
+          <svg viewBox="0 0 36 36">
+            <path fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3"
+                  d="M18 2 a16 16 0 0 1 0 32 a16 16 0 0 1 0 -32"/>
+            <path fill="none" stroke="#E85D24" stroke-width="3" stroke-linecap="round"
+                  stroke-dasharray="65 35"
+                  d="M18 2 a16 16 0 0 1 0 32 a16 16 0 0 1 0 -32"/>
+          </svg>
+        </div>
+      </div>
+      <div class="nutr-bars">
+        <div class="nb-row">
+          <span class="nb-name">Protein</span>
+          <div class="nb-track"><div class="nb-fill" style="width:65%;background:#3B8BD4"></div></div>
+          <span class="nb-val">{{ result.nutrition.protein_g }}g</span>
+        </div>
+        <div class="nb-row">
+          <span class="nb-name">Carbs</span>
+          <div class="nb-track"><div class="nb-fill" style="width:82%;background:#E85D24"></div></div>
+          <span class="nb-val">{{ result.nutrition.carbs_g }}g</span>
+        </div>
+        <div class="nb-row">
+          <span class="nb-name">Fat</span>
+          <div class="nb-track"><div class="nb-fill" style="width:48%;background:#1D9E75"></div></div>
+          <span class="nb-val">{{ result.nutrition.fat_g }}g</span>
+        </div>
+        <div class="nb-row">
+          <span class="nb-name">Fiber</span>
+          <div class="nb-track"><div class="nb-fill" style="width:35%;background:#BA7517"></div></div>
+          <span class="nb-val">{{ result.nutrition.fiber_g }}g</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cooking steps -->
+  <div class="steps-card">
+    <div class="rpp-head">
+      <span class="rpp-ico">👨‍🍳</span>
+      <h2 class="rpp-title">How to Cook</h2>
+      <span class="rpp-count">{{ result.steps | length }} steps</span>
+    </div>
+    <div class="steps-shine"></div>
+    <div class="steps-grid">
+      {% for step in result.steps %}
+      <div class="step-box" style="animation-delay:{{ loop.index * 0.06 }}s">
+        <div class="step-n">{{ loop.index }}</div>
+        <p class="step-t">{{ step }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="rp-actions">
+    <a href="{{ url_for('index') }}" class="btn-ra bra-primary">📷 Try another image</a>
+    <a href="{{ url_for('history') }}" class="btn-ra bra-ghost">📋 View history</a>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const s = document.getElementById('cStage');
+  const cols = ['#E85D24','#FF7A45','#3B8BD4','#1D9E75','#BA7517','#fff','#FFB347'];
+  for (let i = 0; i < 70; i++) {
+    const el = document.createElement('div');
+    el.className = 'cp';
+    const sz = 5 + Math.random() * 7;
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${sz}px; height:${sz}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      border-radius:${Math.random()>.5?'50%':'3px'};
+      animation-delay:${Math.random()*.8}s;
+      animation-duration:${.9+Math.random()*.6}s;
+    `;
+    s.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+})();
+</script>
+{% endblock %}

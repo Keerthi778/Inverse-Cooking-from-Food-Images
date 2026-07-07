@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Sign Up · InverseCooking AI{% endblock %}
+{% block content %}
+<div class="auth-page">
+
+  <div class="orbit-wrap">
+    <div class="orbit o1"><span>🥑</span></div>
+    <div class="orbit o2"><span>🍋</span></div>
+    <div class="orbit o3"><span>🧄</span></div>
+  </div>
+
+  <div class="auth-layout">
+    <div class="auth-info">
+      <div class="auth-eyebrow"><div class="pulse-dot"></div>Join InverseCooking</div>
+      <h1 class="auth-headline">
+        Cook smarter<br>with <span class="gtext">AI vision</span>
+      </h1>
+      <p class="auth-body">
+        Create a free account and start turning food photos into complete, scaled recipes instantly.
+        No culinary expertise required.
+      </p>
+      <ul class="feat-list">
+        <li>Instant ingredient detection from photos</li>
+        <li>Full nutrition facts per serving</li>
+        <li>Scales to any number of people</li>
+        <li>Step-by-step cooking instructions</li>
+        <li>Prediction history saved to your account</li>
+      </ul>
+    </div>
+
+    <div class="auth-card">
+      <div class="ac-top-glow"></div>
+      <div class="ac-body">
+        <span class="ac-icon">✨</span>
+        <h2 class="ac-title">Create account</h2>
+        <p class="ac-sub">Free forever — no credit card needed</p>
+
+        <form action="{{ url_for('signup') }}" method="POST" class="ac-form">
+          <div class="field">
+            <label for="username">Username</label>
+            <div class="field-box">
+              <span class="field-ico">👤</span>
+              <input type="text" name="username" id="username"
+                     placeholder="choose_a_username" required maxlength="32" autocomplete="username">
+            </div>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="field-box">
+              <span class="field-ico">🔑</span>
+              <input type="password" name="password" id="password"
+                     placeholder="min 6 characters" required minlength="6" autocomplete="new-password">
+            </div>
+          </div>
+          <button type="submit" class="btn-auth">
+            <span>Create Account</span>
+            <span class="btn-auth-arrow">→</span>
+          </button>
+        </form>
+
+        <p class="ac-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in →</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

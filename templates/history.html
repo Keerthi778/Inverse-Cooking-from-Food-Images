@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}History · InverseCooking AI{% endblock %}
+{% block content %}
+<div class="history-page">
+
+  <div class="hist-head">
+    <div class="hero-eyebrow"><div class="pulse-dot"></div>Your predictions</div>
+    <h1 class="page-title">Recipe <span class="gtext">History</span></h1>
+    <p class="page-sub">Your last 20 generated recipes, saved to your account.</p>
+  </div>
+
+  {% if entries %}
+  <div class="hist-grid">
+    {% for entry in entries %}
+    <div class="hg-card" style="animation-delay:{{ loop.index * 0.05 }}s">
+      <div class="hgc-top">
+        <span class="hgc-style">{{ entry.style | capitalize }}</span>
+        <span class="hgc-date">{{ entry.created[:16] }}</span>
+      </div>
+      <div class="hgc-people">👥 {{ entry.people }} {{ 'person' if entry.people == 1 else 'people' }}</div>
+      <div class="hgc-tags">
+        {% for ingr in entry.ingredients[:5] %}
+          <span class="hgt">{{ ingr.name }}</span>
+        {% endfor %}
+        {% if entry.ingredients | length > 5 %}
+          <span class="hgt hgt-more">+{{ entry.ingredients|length - 5 }}</span>
+        {% endif %}
+      </div>
+      <div class="hgc-nutr">
+        <div class="hgn"><span>🔥</span><strong>{{ entry.nutrition.calories }}</strong><small>kcal</small></div>
+        <div class="hgn"><span>💪</span><strong>{{ entry.nutrition.protein_g }}g</strong><small>protein</small></div>
+        <div class="hgn"><span>🌾</span><strong>{{ entry.nutrition.carbs_g }}g</strong><small>carbs</small></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-st">
+    <span class="empty-ico">📷</span>
+    <h2>No predictions yet</h2>
+    <p>Upload your first food image to get started.</p>
+    <a href="{{ url_for('index') }}" class="btn-ra bra-primary" style="display:inline-flex;margin-top:22px">
+      ✨ Upload a photo
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

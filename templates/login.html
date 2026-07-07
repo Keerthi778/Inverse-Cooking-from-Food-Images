@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Sign In · InverseCooking AI{% endblock %}
+{% block content %}
+<div class="auth-page">
+
+  <!-- Orbiting food rings -->
+  <div class="orbit-wrap">
+    <div class="orbit o1"><span>🍕</span></div>
+    <div class="orbit o2"><span>🍣</span></div>
+    <div class="orbit o3"><span>🥗</span></div>
+  </div>
+
+  <div class="auth-layout">
+
+    <!-- Left info panel -->
+    <div class="auth-info">
+      <div class="auth-eyebrow"><div class="pulse-dot"></div>AI-Powered · Recipe Generation</div>
+      <h1 class="auth-headline">
+        Photo in.<br>
+        <span class="gtext">Recipe out.</span>
+      </h1>
+      <p class="auth-body">
+        Upload any food photograph and our deep learning pipeline identifies
+        ingredients, estimates nutrition, and writes full cooking instructions — in under a second.
+      </p>
+      <div class="auth-stats">
+        <div class="ast"><span class="ast-n">101K</span><span class="ast-l">Images trained</span></div>
+        <div class="ast"><span class="ast-n">85%</span><span class="ast-l">Accuracy</span></div>
+        <div class="ast"><span class="ast-n">1,488</span><span class="ast-l">Ingredients</span></div>
+      </div>
+      <div class="auth-badges">
+        <span class="abadge">PyTorch</span>
+        <span class="abadge">Autoencoder</span>
+        <span class="abadge">Flask</span>
+        <span class="abadge">SQLite</span>
+        <span class="abadge">OpenCV</span>
+      </div>
+    </div>
+
+    <!-- 3D glass card -->
+    <div class="auth-card">
+      <div class="ac-top-glow"></div>
+      <div class="ac-body">
+        <span class="ac-icon">🔐</span>
+        <h2 class="ac-title">Welcome back</h2>
+        <p class="ac-sub">Sign in to your account</p>
+
+        <form action="{{ url_for('login') }}" method="POST" class="ac-form">
+          <div class="field">
+            <label for="username">Username</label>
+            <div class="field-box">
+              <span class="field-ico">👤</span>
+              <input type="text" name="username" id="username"
+                     placeholder="your_username" required autocomplete="username">
+            </div>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="field-box">
+              <span class="field-ico">🔑</span>
+              <input type="password" name="password" id="password"
+                     placeholder="••••••••" required autocomplete="current-password">
+            </div>
+          </div>
+          <button type="submit" class="btn-auth">
+            <span>Sign In</span>
+            <span class="btn-auth-arrow">→</span>
+          </button>
+        </form>
+
+        <p class="ac-switch">No account? <a href="{{ url_for('signup') }}">Create one free →</a></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
